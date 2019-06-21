@@ -1,4 +1,17 @@
 ---
+
+- name: Enable WireGuard kernel module
+  modprobe:
+    name: wireguard
+    state: present
+  register: wireguard_module_enabled
+  until:  wireguard_module_enabled is succeeded
+  retries: 10
+  delay: 10
+  failed_when: wireguard_module_enabled is failure
+  tags:
+    - wireguard-install
+
 - name: Configure {{ item }}
   template:
     src: wgX.conf.j2
